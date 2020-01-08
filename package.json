@@ -1,0 +1,19 @@
+{
+  "name": "gulp-starter",
+  "version": "1.0.0",
+  "description": "gulp starter by magikabdul",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magikabdul/gulp-starter.git"
+  },
+  "author": "magikabdul",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/magikabdul/gulp-starter/issues"
+  },
+  "homepage": "https://github.com/magikabdul/gulp-starter#readme"
+}
