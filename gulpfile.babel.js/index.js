@@ -6,7 +6,8 @@ const sourcemaps = require("gulp-sourcemaps");
 const concat = require("gulp-concat");
 
 const sass = require("gulp-sass");
-const autoprefixer = require("gulp-autoprefixer");
+const postCss = require("gulp-postcss");
+const autoprefixer = require("autoprefixer");
 const cleanCss = require("gulp-clean-css");
 
 const uglify = require("gulp-uglify");
@@ -18,21 +19,16 @@ const htmlReplace = require("gulp-html-replace");
 const htmlMin = require("gulp-htmlmin");
 
 const del = require("del");
+const notify = require("gulp-notify");
+const plumber = require("gulp-plumber");
+const rename = require("gulp-rename");
 
-function serve() {
-  browserSync.init({
-    server: "./dist",
-    open: false
-  });
-
-  watch("src/html/**/*.html", series(html));
-  watch("src/scss/**/*.scss", series(styles, css));
-  watch("src/css/**/*css", series(css));
-  watch("src/images/**/*", series(images));
-  watch("src/js/**/*", series(js));
-
-  watch("dist/**/*").on("change", browserSync.reload);
-}
+const errorHandler = err => {
+  notify.onError({
+    title: `Gulp error in ${err.plugin}`,
+    message: err.toString()
+  })(err);
+};
 
 function clean() {
   return del(["dist"]);
@@ -42,13 +38,17 @@ function assets() {
   return src("src/assets/**/*").pipe(dest("dist/assets"));
 }
 
-function styles() {
+function stylesDev() {
   return src("./src/scss/**/*.scss")
+    .pipe(plumber(errorHandler))
     .pipe(sourcemaps.init())
     .pipe(sass().on("error", sass.logError))
-    .pipe(autoprefixer())
+    .pipe(postCss([autoprefixer({ grid: true })]))
+
+    .pipe(cleanCss())
+    .pipe(rename({ suffix: ".min" }))
     .pipe(sourcemaps.write("."))
-    .pipe(dest("src/css"))
+    .pipe(dest("dist/css"))
     .pipe(browserSync.stream());
 }
 
@@ -95,20 +95,40 @@ function cleanTempFiles() {
   return del(["src/css/styles.css", "src/css/styles.css.map"]);
 }
 
-exports.default = series(
-  clean,
-  styles,
-  css,
-  cleanTempFiles,
-  js,
-  images,
-  html,
-  serve
-);
+function serve() {
+  browserSync.init({
+    server: "./dist",
+    open: false
+  });
 
-exports.build = series(clean, styles, css, cleanTempFiles, js, images, html);
+  watch("src/html/**/*.html", series(html));
+  watch("src/scss/**/*.scss", series(styles, css));
+  watch("src/css/**/*css", series(css));
+  watch("src/images/**/*", series(images));
+  watch("src/js/**/*", series(js));
+
+  watch("dist/**/*").on("change", browserSync.reload);
+}
+
+// exports.default = series(
+//   clean,
+//   styles,
+//   css,
+//   cleanTempFiles,
+//   js,
+//   images,
+//   html,
+//   serve
+// );
+
+// exports.build = series(clean, styles, css, cleanTempFiles, js, images, html);
+
+exports.assets = assets;
+
+exports.stylesDev = stylesDev;
+// exports.stylesProd = styles("prod");
+
 exports.serve = serve;
-exports.styles = styles;
 exports.css = series(css);
 exports.js = js;
 exports.images = images;
