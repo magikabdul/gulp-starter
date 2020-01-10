@@ -84,14 +84,18 @@ function html() {
 }
 
 function clean() {
-  return del(["dist", "src/css/styles.css", "src/css/styles.css.map"]);
+  return del(["dist"]);
 }
 
-exports.default = series(clean, styles, css, js, images, html, serve);
-exports.build = series(clean, styles, css, js, images, html);
+function cleanTempFiles() {
+  return del(['src/css/styles.css", "src/css/styles.css.map"]);
+}
+
+exports.default = series(clean, styles, css, cleanTempFiles, js, images, html, serve);
+exports.build = series(clean, styles, css, cleanTempFiles, js, images, html);
 exports.serve = serve;
 exports.styles = styles;
-exports.css = css;
+exports.css = seriescss;
 exports.js = js;
 exports.images = images;
 exports.html = html;
