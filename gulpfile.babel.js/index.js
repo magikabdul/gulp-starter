@@ -1,4 +1,4 @@
-const { src, dest, series } = require("gulp");
+const { src, dest, series, watch } = require("gulp");
 
 const browserSync = require("browser-sync");
 
@@ -25,13 +25,13 @@ function serve() {
     open: false
   });
 
-  gulp.watch("src/html/**/*.html", gulp.series(html));
-  gulp.watch("src/scss/**/*.scss", gulp.series(styles, css));
-  gulp.watch("src/css/**/*css", gulp.series(css));
-  gulp.watch("src/images/**/*", gulp.series(images));
-  gulp.watch("src/js/**/*", gulp.series(js));
+  watch("src/html/**/*.html", series(html));
+  watch("src/scss/**/*.scss", series(styles, css));
+  watch("src/css/**/*css", series(css));
+  watch("src/images/**/*", series(images));
+  watch("src/js/**/*", series(js));
 
-  gulp.watch("dist/**/*").on("change", browserSync.reload);
+  watch("dist/**/*").on("change", browserSync.reload);
 }
 
 function styles() {
@@ -84,7 +84,7 @@ function html() {
 }
 
 function clean() {
-  return del(["dist"]);
+  return del(["dist", "src/css/styles.css", "src/css/styles.css.map"]);
 }
 
 exports.default = series(clean, styles, css, js, images, html, serve);
