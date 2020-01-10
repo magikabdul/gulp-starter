@@ -15,5 +15,22 @@
   "bugs": {
     "url": "https://github.com/magikabdul/gulp-starter/issues"
   },
-  "homepage": "https://github.com/magikabdul/gulp-starter#readme"
+  "homepage": "https://github.com/magikabdul/gulp-starter#readme",
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/register": "^7.7.7",
+    "browser-sync": "^2.26.7",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-changed": "^4.0.2",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-html-replace": "^1.6.2",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-imagemin": "^6.2.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2"
+  }
 }
