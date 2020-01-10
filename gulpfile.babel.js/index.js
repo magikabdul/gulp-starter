@@ -88,10 +88,19 @@ function clean() {
 }
 
 function cleanTempFiles() {
-  return del(['src/css/styles.css", "src/css/styles.css.map"]);
+  return del(["src/css/styles.css", "src/css/styles.css.map"]);
 }
 
-exports.default = series(clean, styles, css, cleanTempFiles, js, images, html, serve);
+exports.default = series(
+  clean,
+  styles,
+  css,
+  cleanTempFiles,
+  js,
+  images,
+  html,
+  serve
+);
 exports.build = series(clean, styles, css, cleanTempFiles, js, images, html);
 exports.serve = serve;
 exports.styles = styles;
