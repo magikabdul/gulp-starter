@@ -34,6 +34,14 @@ function serve() {
   watch("dist/**/*").on("change", browserSync.reload);
 }
 
+function clean() {
+  return del(["dist"]);
+}
+
+function assets() {
+  return src("src/assets/**/*").pipe(dest("dist/assets"));
+}
+
 function styles() {
   return src("./src/scss/**/*.scss")
     .pipe(sourcemaps.init())
@@ -83,10 +91,6 @@ function html() {
     .pipe(dest("dist"));
 }
 
-function clean() {
-  return del(["dist"]);
-}
-
 function cleanTempFiles() {
   return del(["src/css/styles.css", "src/css/styles.css.map"]);
 }
@@ -101,10 +105,11 @@ exports.default = series(
   html,
   serve
 );
+
 exports.build = series(clean, styles, css, cleanTempFiles, js, images, html);
 exports.serve = serve;
 exports.styles = styles;
-exports.css = seriescss;
+exports.css = series(css);
 exports.js = js;
 exports.images = images;
 exports.html = html;
