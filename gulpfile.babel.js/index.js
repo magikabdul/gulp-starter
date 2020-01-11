@@ -10,6 +10,7 @@ const postCss = require("gulp-postcss");
 const autoprefixer = require("autoprefixer");
 const cleanCss = require("gulp-clean-css");
 
+const babel = require("gulp-babel");
 const uglify = require("gulp-uglify");
 
 const imageMin = require("gulp-imagemin");
@@ -62,9 +63,24 @@ function stylesProd() {
     .pipe(dest("dist/css"));
 }
 
-function js() {
+function scriptsDev() {
   return src("src/js/**/*")
-    .pipe(concat("scripts.min.js"))
+    .pipe(plumber(errorHandler))
+    .pipe(babel())
+    .pipe(sourcemaps.init())
+    .pipe(concat("scripts.js"))
+    .pipe(rename({ suffix: ".min" }))
+    .pipe(uglify())
+    .pipe(sourcemaps.write("./"))
+    .pipe(dest("dist/js"));
+}
+
+function scriptsProd() {
+  return src("src/js/**/*")
+    .pipe(plumber(errorHandler))
+    .pipe(babel())
+    .pipe(concat("scripts.js"))
+    .pipe(rename({ suffix: ".min" }))
     .pipe(uglify())
     .pipe(dest("dist/js"));
 }
@@ -133,7 +149,11 @@ exports.clean = clean;
 exports.stylesDev = stylesDev;
 exports.stylesProd = stylesProd;
 
-exports.serve = serve;
-exports.js = js;
+exports.scriptsDev = scriptsDev;
+exports.scriptsProd = scriptsProd;
+
 exports.images = images;
+
 exports.html = html;
+
+exports.serve = serve;
