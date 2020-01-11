@@ -52,10 +52,13 @@ function stylesDev() {
     .pipe(browserSync.stream());
 }
 
-function css() {
-  return src("src/css/**/*.css")
-    .pipe(concat("styles.min.css"))
+function stylesProd() {
+  return src("./src/scss/**/*.scss")
+    .pipe(plumber(errorHandler))
+    .pipe(sass().on("error", sass.logError))
+    .pipe(postCss([autoprefixer({ grid: true })]))
     .pipe(cleanCss())
+    .pipe(rename({ suffix: ".min" }))
     .pipe(dest("dist/css"));
 }
 
@@ -125,12 +128,12 @@ function serve() {
 
 exports.assets = assets;
 
+exports.clean = clean;
+
 exports.stylesDev = stylesDev;
-// exports.stylesProd = styles("prod");
+exports.stylesProd = stylesProd;
 
 exports.serve = serve;
-exports.css = series(css);
 exports.js = js;
 exports.images = images;
 exports.html = html;
-exports.clean = clean;
