@@ -110,50 +110,31 @@ function html() {
     .pipe(dest("dist"));
 }
 
-function cleanTempFiles() {
-  return del(["src/css/styles.css", "src/css/styles.css.map"]);
-}
-
 function serve() {
   browserSync.init({
     server: "./dist",
     open: false
   });
 
-  watch("src/html/**/*.html", series(html));
-  watch("src/scss/**/*.scss", series(styles, css));
-  watch("src/css/**/*css", series(css));
+  watch("src/assets/**/*", series(assets));
+  watch("src/scss/**/*.scss", series(stylesDev));
+  watch("src/js/**/*", series(scriptsDev));
   watch("src/images/**/*", series(images));
-  watch("src/js/**/*", series(js));
+  watch("src/html/**/*.html", series(html));
 
   watch("dist/**/*").on("change", browserSync.reload);
 }
 
-// exports.default = series(
-//   clean,
-//   styles,
-//   css,
-//   cleanTempFiles,
-//   js,
-//   images,
-//   html,
-//   serve
-// );
+exports.default = series(
+  clean,
+  assets,
+  stylesDev,
+  scriptsDev,
+  images,
+  html,
+  serve
+);
 
-// exports.build = series(clean, styles, css, cleanTempFiles, js, images, html);
-
-exports.assets = assets;
+exports.build = series(clean, assets, stylesProd, scriptsProd, images, html);
 
 exports.clean = clean;
-
-exports.stylesDev = stylesDev;
-exports.stylesProd = stylesProd;
-
-exports.scriptsDev = scriptsDev;
-exports.scriptsProd = scriptsProd;
-
-exports.images = images;
-
-exports.html = html;
-
-exports.serve = serve;
